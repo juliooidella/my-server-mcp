@@ -26,6 +26,7 @@ class Settings:
     jira_url: str = "https://nimitz.atlassian.net/"
     server_host: str = "0.0.0.0"
     server_port: int = 8015
+    mcp_prod_token: str = ""
     
     @classmethod
     def from_env(cls) -> "Settings":
@@ -40,11 +41,12 @@ class Settings:
         """
         username = os.environ.get("ATLASSIAN_USERNAME")
         api_token = os.environ.get("ATLASSIAN_API_TOKEN")
+        mcp_prod_token = os.environ.get("MCP_PROD_TOKEN")
         
-        if not username or not api_token:
+        if not username or not api_token or not mcp_prod_token:
             raise ValueError(
-                "As variáveis de ambiente ATLASSIAN_USERNAME e "
-                "ATLASSIAN_API_TOKEN precisam ser definidas."
+                "As variáveis de ambiente ATLASSIAN_USERNAME, "
+                "ATLASSIAN_API_TOKEN e MCP_PROD_TOKEN precisam ser definidas."
             )
         
         return cls(
@@ -52,7 +54,8 @@ class Settings:
             atlassian_api_token=api_token,
             jira_url=os.environ.get("JIRA_URL", cls.jira_url),
             server_host=os.environ.get("SERVER_HOST", cls.server_host),
-            server_port=int(os.environ.get("SERVER_PORT", cls.server_port))
+            server_port=int(os.environ.get("SERVER_PORT", cls.server_port)),
+            mcp_prod_token=mcp_prod_token
         )
     
     def validate(self) -> None:
@@ -70,3 +73,6 @@ class Settings:
             raise ValueError("Jira URL não pode estar vazio")
         if self.server_port <= 0 or self.server_port > 65535:
             raise ValueError("Porta deve estar entre 1 e 65535")
+        if not self.mcp_prod_token:
+            raise ValueError("MCP_PROD_TOKEN não pode estar vazio")
+        

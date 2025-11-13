@@ -27,7 +27,7 @@ def create_app() -> FastMCP:
     settings = Settings.from_env()
     settings.validate()
     
-    token_secreto = "d41d8cd98f00b204e9800998ecf8427e" 
+    token_secreto = settings.mcp_prod_token
     
     auth_verifier = StaticTokenVerifier(
         tokens={
