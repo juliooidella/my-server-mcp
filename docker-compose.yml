@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  jira-server:
+    # Constrói a imagem a partir do Dockerfile na pasta atual
+    build: .
+    
+    # Define o nome do container (opcional, mas igual ao --name)
+    container_name: jira-server
+    
+    # Define a política de reinício
+    restart: unless-stopped
+    
+    # Mapeia a porta
+    ports:
+      - "8015:8015"
+      
+    # Carrega as variáveis de ambiente do arquivo .env
+    env_file:
+      - .env
