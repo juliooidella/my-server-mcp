@@ -127,7 +127,8 @@ uv sync
 # Execução do projeto
 uv run app.py
 ```
-
+---
+- Usando apenas Python
 ```bash
 # Criar ambiente virtual
 python -m venv venv
