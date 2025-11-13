@@ -700,6 +700,7 @@ dependencies = [
     { name = "atlassian-python-api" },
     { name = "fastmcp" },
     { name = "mcp", extra = ["cli"] },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
@@ -707,6 +708,7 @@ requires-dist = [
     { name = "atlassian-python-api", specifier = ">=4.0.7" },
     { name = "fastmcp", specifier = ">=2.13.0.2" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.21.0" },
+    { name = "python-dotenv", specifier = ">=1.2.1" },
 ]
 
 [[package]]

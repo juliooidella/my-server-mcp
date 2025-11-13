@@ -8,7 +8,9 @@ from fastmcp import FastMCP
 from .config.settings import Settings
 from .services.jira_service import JiraService
 from .tools.jira_tools import register_jira_tools
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def create_app() -> FastMCP:
     """
