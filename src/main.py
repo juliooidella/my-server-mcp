@@ -5,6 +5,8 @@ Este módulo inicializa e configura o servidor MCP,
 seguindo o princípio de Inversão de Dependência.
 """
 from fastmcp import FastMCP
+from .services.discord_service import DiscordService
+from .tools.discord_tools import registrar_ferramentas_discord
 from .config.settings import Settings
 from .services.jira_service import JiraService
 from .tools.jira_tools import register_jira_tools
@@ -51,8 +53,15 @@ def create_app() -> FastMCP:
         cloud=True
     )
     
+    discord_service = DiscordService(
+        webhook_url=settings.discord_webhook_url
+    )
+    
     # Registra ferramentas
     register_jira_tools(mcp, jira_service)
+
+    if settings.discord_webhook_url:
+        registrar_ferramentas_discord(mcp, discord_service)
     
     return mcp, settings
 

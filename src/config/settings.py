@@ -27,6 +27,7 @@ class Settings:
     server_host: str = "0.0.0.0"
     server_port: int = 8015
     mcp_prod_token: str = ""
+    discord_webhook_url: Optional[str] = None
     
     @classmethod
     def from_env(cls) -> "Settings":
@@ -55,7 +56,8 @@ class Settings:
             jira_url=os.environ.get("JIRA_URL", cls.jira_url),
             server_host=os.environ.get("SERVER_HOST", cls.server_host),
             server_port=int(os.environ.get("SERVER_PORT", cls.server_port)),
-            mcp_prod_token=mcp_prod_token
+            mcp_prod_token=mcp_prod_token,
+            discord_webhook_url=os.environ.get("DISCORD_WEBHOOK_URL", "")
         )
     
     def validate(self) -> None:
