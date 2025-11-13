@@ -120,6 +120,13 @@ curl http://localhost:8015
 ### Opção 2: Executar Localmente (Python)
 
 #### 1. Instalar Dependências
+- Usando UV
+```bash
+# Configuração do Ambiente
+uv sync
+# Execução do projeto
+uv run app.py
+```
 
 ```bash
 # Criar ambiente virtual
