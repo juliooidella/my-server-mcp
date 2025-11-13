@@ -9,6 +9,7 @@ from .config.settings import Settings
 from .services.jira_service import JiraService
 from .tools.jira_tools import register_jira_tools
 from dotenv import load_dotenv
+from fastmcp.server.auth.providers.jwt import StaticTokenVerifier
 
 load_dotenv()
 
@@ -26,8 +27,21 @@ def create_app() -> FastMCP:
     settings = Settings.from_env()
     settings.validate()
     
-    # Cria instância do servidor MCP
-    mcp = FastMCP("MyServer")
+    token_secreto = "d41d8cd98f00b204e9800998ecf8427e" 
+    
+    auth_verifier = StaticTokenVerifier(
+        tokens={
+            token_secreto: {
+                "client_id": "admin_user", # Identificador de quem está usando
+                "scopes": ["admin"]        # Permissões (opcional)
+            }
+        }
+    )
+    # ------------------------------------------------------
+
+    # NEW: Passamos o parametro 'auth' para o FastMCP
+    # Outras formas de autenticação deve consultar a documentação https://gofastmcp.com/servers/auth/authentication
+    mcp = FastMCP("MyServer", auth=auth_verifier)
     
     # Cria serviço Jira
     jira_service = JiraService(
