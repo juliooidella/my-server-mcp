@@ -3,6 +3,8 @@ Serviço de integração com Jira.
 
 Este módulo encapsula toda a lógica de interação com a API do Jira,
 seguindo os princípios Single Responsibility e Dependency Inversion.
+
+https://atlassian-python-api.readthedocs.io/
 """
 from typing import Dict, Any, Optional
 from atlassian import Jira
