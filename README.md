@@ -176,26 +176,57 @@ mcp = FastMCP("MyServer", auth=auth_verifier)
 
 ### 🔗 Configuração no GitHub Copilot
 
-#### Com Autenticação (Recomendado para Produção)
+#### ✅ **Método Recomendado: Input Prompt (Seguro)**
 
-Crie `.vscode/mcp.json` **com headers de autenticação**:
+Crie `.vscode/mcp.json` com **prompt seguro para token**:
 
 ```json
 {
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "mcp-auth-token", 
+            "description": "Insira seu Token de Autenticação MCP",
+            "password": true
+        }
+    ],
     "servers": {
         "jira-mcp": {
-            "description": "Servidor MCP JIRA com autenticação",
+            "description": "Servidor MCP JIRA com autenticação segura",
             "url": "http://localhost:8015/mcp",
             "type": "http",
             "headers": {
-                "Authorization": "Bearer d41d8cd98f00b204e9800998ecf8427e"
+                "Authorization": "Bearer ${input:mcp-auth-token}"
             }
         }
     }
 }
 ```
 
-#### Sem Autenticação (Apenas Desenvolvimento Local)
+**Vantagens deste método:**
+- 🔒 **Token não fica exposto** no código
+- 🔐 **Prompt mascarado** (password: true)
+- 👤 **Usuário insere o token** quando necessário
+- 📁 **Arquivo pode ser commitado** sem riscos
+
+#### ⚙️ **Alternativa: Variável de Ambiente**
+
+```json
+{
+    "servers": {
+        "jira-mcp": {
+            "description": "Servidor MCP JIRA com variável de ambiente",
+            "url": "http://localhost:8015/mcp", 
+            "type": "http",
+            "headers": {
+                "Authorization": "Bearer ${env:MCP_AUTH_TOKEN}"
+            }
+        }
+    }
+}
+```
+
+#### 🛠️ **Desenvolvimento Local (Sem Autenticação)**
 
 ```json
 {
@@ -242,7 +273,7 @@ print(f"Novo token: {token_seguro}")
 
 ### 🌍 Configurações por Ambiente
 
-#### Desenvolvimento Local
+#### 🛠️ **Desenvolvimento Local**
 ```json
 {
     "servers": {
@@ -255,7 +286,30 @@ print(f"Novo token: {token_seguro}")
 }
 ```
 
-#### Produção/Compartilhado
+#### 🌐 **Produção/Compartilhado (Com Input Prompt)**
+```json
+{
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "prod-auth-token",
+            "description": "Token de Produção MCP", 
+            "password": true
+        }
+    ],
+    "servers": {
+        "jira-mcp-prod": {
+            "url": "https://mcp.empresa.com/mcp",
+            "type": "http",
+            "headers": {
+                "Authorization": "Bearer ${input:prod-auth-token}"
+            }
+        }
+    }
+}
+```
+
+#### 🔧 **Alternativa com Variável de Ambiente**
 ```json
 {
     "servers": {
@@ -302,7 +356,29 @@ auth = APIKeyVerifier(
 
 ### 🛡️ Melhores Práticas de Segurança
 
-1. **✅ Use HTTPS em produção**
+1. **✅ Use Input Prompts (RECOMENDADO)**
+   ```json
+   {
+       "inputs": [
+           {
+               "type": "promptString",
+               "id": "secure-token",
+               "description": "Token de Autenticação",
+               "password": true
+           }
+       ],
+       "servers": {
+           "jira-mcp": {
+               "url": "https://mcp.empresa.com/mcp",
+               "headers": {
+                   "Authorization": "Bearer ${input:secure-token}"
+               }
+           }
+       }
+   }
+   ```
+
+2. **✅ Use HTTPS em produção**
    ```json
    {
        "servers": {
@@ -314,13 +390,13 @@ auth = APIKeyVerifier(
    }
    ```
 
-2. **✅ Rotacione tokens regularmente**
+3. **✅ Rotacione tokens regularmente**
    ```bash
    # Gerar novo token a cada 90 dias
    python -c "import secrets; print(secrets.token_urlsafe(32))"
    ```
 
-3. **✅ Use variáveis de ambiente**
+4. **✅ Use variáveis de ambiente (alternativa)**
    ```json
    {
        "servers": {
@@ -334,12 +410,12 @@ auth = APIKeyVerifier(
    }
    ```
 
-4. **✅ Configure diferentes tokens por ambiente**
+5. **✅ Configure diferentes tokens por ambiente**
    - **Desenvolvimento**: Token simples ou sem autenticação
    - **Teste**: Token de teste com permissões limitadas  
    - **Produção**: Token forte com auditoria completa
 
-5. **✅ Monitore acessos**
+6. **✅ Monitore acessos**
    ```python
    import logging
    
