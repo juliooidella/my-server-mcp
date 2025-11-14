@@ -15,11 +15,20 @@ from fastmcp import Client
 # 1. Coloque o URL do seu servidor aqui
 SERVER_URL = "http://127.0.0.1:8007/mcp"  # ou https://api.exemplo.com/mcp
 
+config = {
+    "mcpServers": {
+        "jira_server": {
+            "url": "http://127.0.0.1:8015/mcp",
+            # O token deve ser passado como Bearer
+            "headers": {"Authorization": "Bearer d41d8cd98f00b204e9800998ecf8427e"}
+        }
+    }
+}
 async def test_remote():
     print(f"🔌 Conectando a: {SERVER_URL} ...")
     
     # O cliente detecta automaticamente que é transporte HTTP/SSE pelo URL
-    client = Client(SERVER_URL)
+    client = Client(config)
 
     async with client:
         # 1. Teste de Conectividade Básica (Ping)
@@ -47,9 +56,10 @@ async def test_remote():
         # 4. (Opcional) Teste de Chamada de Ferramenta
         # Descomente as linhas abaixo se quiser testar uma ferramenta específica
         
-        tool_name = "get_title_description_issue"
-        params = {"key": "TECD-4906",
-            }   
+        tool_name = "enviar_mensagem_discord"
+        params = {"mensagem": "Olá Mundo",
+                  
+                 }
         print(f"\n🚀 Testando ferramenta '{tool_name}'...")
         result = await client.call_tool(tool_name, params)
         print(f"   Resultado: {result.data}")
