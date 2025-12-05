@@ -140,7 +140,7 @@ python app.py
     "servers": {
         "jira-mcp": {
             "type": "http",
-            "url": "http://localhost:8015",
+            "url": "http://localhost:8015/mcp",
             "headers": {
                 "Authorization": "Bearer ${input:mcp-prod-token}"
             }
